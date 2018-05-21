@@ -40,6 +40,7 @@
         <activity
             android:name=".HomeActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
 
         <activity

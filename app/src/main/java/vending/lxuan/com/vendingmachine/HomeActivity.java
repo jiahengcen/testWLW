@@ -104,7 +104,10 @@ public class HomeActivity extends BaseActivity {
         Picasso.with(this).load(UrlHelp.URL_LIST_4).into(view4);
         Picasso.with(this).load(UrlHelp.URL_LIST_5).into(view5);
     }
-
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
     private void initReceiver() {
         receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();

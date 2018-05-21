@@ -71,7 +71,7 @@ public class CheckCoinService extends Service {
                 }
             }
         };
-        stepTimer.schedule(mStepTask, 0, 10);
+        stepTimer.schedule(mStepTask, 0, 5);
     }
 
     @Nullable

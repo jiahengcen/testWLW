@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 
 import vending.lxuan.com.vendingmachine.AdActivity;
+import vending.lxuan.com.vendingmachine.utils.Contents;
 
 /**
  * Created by apple
@@ -57,7 +58,9 @@ public class BaseActivity extends Activity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MSG:
-                    startActivity(new Intent(BaseActivity.this, AdActivity.class));
+                    if(!Contents.IS_CLICK){
+                        startActivity(new Intent(BaseActivity.this, AdActivity.class));
+                    }
                     break;
             }
         }

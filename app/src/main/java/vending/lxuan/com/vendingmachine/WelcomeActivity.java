@@ -42,6 +42,7 @@ public class WelcomeActivity extends Activity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             startActivity(new Intent(WelcomeActivity.this, HomeActivity.class));
+            WelcomeActivity.this.finish();
         }
     };
 
@@ -99,6 +100,8 @@ public class WelcomeActivity extends Activity {
         @GET("index.php?s=Home/Api/version")
         Call<PathModel> getPath();
     }
+
+
 
     public static int getAppVersionCode(Context context) {
         if (context != null) {

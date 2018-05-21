@@ -1,6 +1,7 @@
 /build
 local.properties
 .idea/libraries
-app/release
 /key.rar
 /key
+app/release
+
