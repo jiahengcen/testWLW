@@ -34,16 +34,23 @@ public class DownloadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
         mContext = getApplicationContext();
         Log.e("HLA", "start download");
         if (lock.isLocked()) {
             Log.e("HLA", "one task in running");
-            return;
+            return super.onStartCommand(intent, flags, startId);
         }
 
         if (checkNeedDownloadVideo()) {
             downloadVideo();
         }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private void downloadVideo() {
@@ -77,7 +84,7 @@ public class DownloadService extends Service {
         @Override
         protected String doInBackground(String... strings) {
             lock.lock();
-            Log.e("HLA", "download task in run...");
+            Log.e("HLA", "download task in run..." + Thread.currentThread());
             DownloadImageUtils.downloadLatestFeature(mContext, ApiUtil.getServiceApi(mContext), getVideoUrl(), getVideoName(getVideoUrl()));
             lock.unlock();
             return null;

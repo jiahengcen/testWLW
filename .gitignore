@@ -4,7 +4,6 @@ local.properties
 /key.rar
 /key
 app/release
-
 app/app.iml
 testWLW.iml
 .gradle/4.1/javaCompile/classAnalysis.bin
@@ -12,3 +11,5 @@ testWLW.iml
 .gradle/4.1/fileHashes/fileHashes.lock
 .gradle/4.1/javaCompile/taskHistory.bin
 .gradle/4.1/taskHistory/taskHistory.lock
+.gradle/4.1/javaCompile/javaCompile.lock
+.gradle/4.1/taskHistory/fileSnapshots.bin

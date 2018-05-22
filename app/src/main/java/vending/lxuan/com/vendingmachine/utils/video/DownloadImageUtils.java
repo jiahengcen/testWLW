@@ -33,21 +33,18 @@ public class DownloadImageUtils {
      */
     public static void downloadLatestFeature(final Context context, AppServiceApi mApi, final String url, final String videoName) {
         Call<ResponseBody> resultCall = AppService.downloadLatestFeature(mApi, url);
-        resultCall.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (writeResponseBodyToDisk(videoName, response.body())) {
-                    SharedPreferences sf = context.getSharedPreferences(VideoHelp.VIDEO_FILE_NAME, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sf.edit();
-                    editor.putString(VideoHelp.VIDEO_FILE_NAME, videoName);
-                    editor.apply();
-                }
+        try {
+            Response<ResponseBody> bodyResponse = resultCall.execute();
+            Log.e("HLA", "net work thread" + Thread.currentThread());
+            if (writeResponseBodyToDisk(videoName, bodyResponse.body())) {
+                SharedPreferences sf = context.getSharedPreferences(VideoHelp.VIDEO_FILE_NAME, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sf.edit();
+                editor.putString(VideoHelp.VIDEO_NAME, videoName);
+                editor.apply();
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-            }
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -64,7 +61,12 @@ public class DownloadImageUtils {
             InputStream is = body.byteStream();
             File fileDr = new File(APP_VIDEO_DIR);
             if (!fileDr.exists()) {
-                fileDr.mkdir();
+                boolean f = fileDr.mkdirs();
+                if (f) {
+                    Log.e("HLA", "make file .");
+                } else {
+                    Log.e("HLA", "make file error.");
+                }
             }
             File file = new File(APP_VIDEO_DIR, videoName);
             if (file.exists()) {
