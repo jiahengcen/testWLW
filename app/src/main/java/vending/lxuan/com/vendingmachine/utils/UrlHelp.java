@@ -18,7 +18,9 @@ public class UrlHelp {
     public static String getPath() {
         return "http://innisfree.topichina.com.cn/vendingmachine/";
     }
-
+    public static String getVideoUrl(){
+        return "http://innisfree.topichina.com.cn/vendingmachine/images/";
+    }
     public static final String URL_WELCOME = getHostUrl() + "kv.png";
     public static final String URL_LIST_BG = getHostUrl() + "product/list_bg.png";
     public static final String URL_LIST_1 = getHostUrl() + "product/1/list.png";

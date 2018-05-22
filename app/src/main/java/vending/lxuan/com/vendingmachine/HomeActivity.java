@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import vending.lxuan.com.vendingmachine.base.BaseActivity;
+import vending.lxuan.com.vendingmachine.service.DownloadService;
 import vending.lxuan.com.vendingmachine.utils.UrlHelp;
 
 /**
@@ -40,6 +41,7 @@ public class HomeActivity extends BaseActivity {
         initData();
         initReceiver();
     }
+
 
     @Override
     protected void onDestroy() {
@@ -104,10 +106,12 @@ public class HomeActivity extends BaseActivity {
         Picasso.with(this).load(UrlHelp.URL_LIST_4).into(view4);
         Picasso.with(this).load(UrlHelp.URL_LIST_5).into(view5);
     }
+
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
     }
+
     private void initReceiver() {
         receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();

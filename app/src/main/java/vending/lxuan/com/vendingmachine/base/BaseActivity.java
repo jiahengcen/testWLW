@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 
 import vending.lxuan.com.vendingmachine.AdActivity;
+import vending.lxuan.com.vendingmachine.VideoActivity;
+import vending.lxuan.com.vendingmachine.service.DownloadService;
 import vending.lxuan.com.vendingmachine.utils.Contents;
 
 /**
@@ -18,7 +20,7 @@ import vending.lxuan.com.vendingmachine.utils.Contents;
 
 public class BaseActivity extends Activity {
     protected static final int MSG = 1;
-    protected long mBackgroundAliveTime = 1000 * 60;
+    protected long mBackgroundAliveTime = 1000 * 10;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +53,10 @@ public class BaseActivity extends Activity {
         return super.onTouchEvent(event);
     }
 
+    private void prepareVideo() {
+        Intent intent = new Intent(this, DownloadService.class);
+        startService(intent);
+    }
     protected Handler mHandler = new Handler() {
 
         @Override
@@ -59,7 +65,14 @@ public class BaseActivity extends Activity {
             switch (msg.what) {
                 case MSG:
                     if(!Contents.IS_CLICK){
-                        startActivity(new Intent(BaseActivity.this, AdActivity.class));
+                        if(!VideoActivity.hasVideoDownLoad(BaseActivity.this)){
+                            mHandler.removeMessages(MSG);
+                            prepareVideo();
+                            mHandler.sendEmptyMessageDelayed(MSG, mBackgroundAliveTime);
+                        }else {
+                            startActivity(new Intent(BaseActivity.this, VideoActivity.class));
+
+                        }
                     }
                     break;
             }
