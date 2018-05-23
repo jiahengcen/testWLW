@@ -48,9 +48,9 @@ public class FallingActivity extends Activity {
             }
         });
         
-        //dialog = new MyDialog(this);
-        //dialog.setCancelable(false);
-        //dialog.show();
+        dialog = new MyDialog(this);
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     public class FullScreenDialog extends Dialog {
