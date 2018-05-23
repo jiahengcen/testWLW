@@ -62,6 +62,7 @@ public class CheckCoinService extends Service {
             @Override
             public void run() {
                 if (null != serialPort && !isCheck) {
+                    //HLA debug>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                     if (0 == serialPort.getType()) {
                         isCheck = true;
                         Contents.IS_CLICK = true;
@@ -72,6 +73,7 @@ public class CheckCoinService extends Service {
             }
         };
         stepTimer.schedule(mStepTask, 0, 5);
+        //for debug ....stepTimer.schedule(mStepTask, 0, 5*1000*10);
     }
 
     @Nullable

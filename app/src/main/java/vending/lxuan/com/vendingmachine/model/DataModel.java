@@ -6,7 +6,10 @@ package vending.lxuan.com.vendingmachine.model;
  */
 
 public class DataModel {
-    public String aisleName;
-    public String noName;
-    public String numb;
+    //货道号
+    public String _id;
+    //产品编号
+    public String productNo;
+    //产品数量
+    public String productCount;
 }

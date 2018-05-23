@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import vending.lxuan.com.vendingmachine.base.BaseActivity;
 import vending.lxuan.com.vendingmachine.service.DownloadService;
+import vending.lxuan.com.vendingmachine.utils.Contents;
 import vending.lxuan.com.vendingmachine.utils.UrlHelp;
 
 /**
@@ -22,7 +24,7 @@ import vending.lxuan.com.vendingmachine.utils.UrlHelp;
  * 18/5/8
  */
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView viewBg;
     private ImageView view1;
@@ -33,6 +35,7 @@ public class HomeActivity extends BaseActivity {
     private MyReceiver receiver;
     private MyReceiver1 receiver1;
     private TextView coin;
+    private Button touBiButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class HomeActivity extends BaseActivity {
         findViewById(R.id.ll_commit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this, FallingActivity.class));
+                startActivity(new Intent(HomeActivity.this, NewFallingActivity.class));
             }
         });
 
@@ -96,6 +99,12 @@ public class HomeActivity extends BaseActivity {
                 openDetail("5");
             }
         });
+        if (BuildConfig.IS_DEBUG) {
+            touBiButton = findViewById(R.id.toubi);
+            touBiButton.setVisibility(View.VISIBLE);
+            touBiButton.setOnClickListener(this);
+        }
+
     }
 
     private void initData() {
@@ -117,8 +126,6 @@ public class HomeActivity extends BaseActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.vending.receiver");
         registerReceiver(receiver, filter);
-
-
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction("com.success.receiver");
         receiver1 = new MyReceiver1();
@@ -129,6 +136,15 @@ public class HomeActivity extends BaseActivity {
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("pageNumb", numb);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.toubi:
+                sendTouBi();
+                break;
+        }
     }
 
     public class MyReceiver extends BroadcastReceiver {
@@ -148,4 +164,10 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
+    private void sendTouBi() {
+        Contents.IS_CLICK = true;
+        Intent intent = new Intent();
+        intent.setAction("com.vending.receiver");
+        sendBroadcast(intent);
+    }
 }

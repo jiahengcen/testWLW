@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 
 import vending.lxuan.com.vendingmachine.AdActivity;
+import vending.lxuan.com.vendingmachine.BuildConfig;
 import vending.lxuan.com.vendingmachine.VideoActivity;
 import vending.lxuan.com.vendingmachine.service.DownloadService;
 import vending.lxuan.com.vendingmachine.utils.Contents;
@@ -20,11 +21,14 @@ import vending.lxuan.com.vendingmachine.utils.Contents;
 
 public class BaseActivity extends Activity {
     protected static final int MSG = 1;
-    protected long mBackgroundAliveTime = 1000 * 10;
+    protected long mBackgroundAliveTime = 1000 * 60;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.IS_DEBUG) {
+            mBackgroundAliveTime = 1000 * 10;
+        }
     }
 
     @Override
@@ -57,6 +61,7 @@ public class BaseActivity extends Activity {
         Intent intent = new Intent(this, DownloadService.class);
         startService(intent);
     }
+
     protected Handler mHandler = new Handler() {
 
         @Override
@@ -64,12 +69,12 @@ public class BaseActivity extends Activity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MSG:
-                    if(!Contents.IS_CLICK){
-                        if(!VideoActivity.hasVideoDownLoad(BaseActivity.this)){
+                    if (!Contents.IS_CLICK) {
+                        if (!VideoActivity.hasVideoDownLoad(BaseActivity.this)) {
                             mHandler.removeMessages(MSG);
                             prepareVideo();
                             mHandler.sendEmptyMessageDelayed(MSG, mBackgroundAliveTime);
-                        }else {
+                        } else {
                             startActivity(new Intent(BaseActivity.this, VideoActivity.class));
 
                         }

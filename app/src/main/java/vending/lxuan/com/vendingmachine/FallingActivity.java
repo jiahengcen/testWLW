@@ -8,11 +8,17 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import vending.lxuan.com.vendingmachine.adapter.UpAdapter;
+import vending.lxuan.com.vendingmachine.dao.VendingDao;
+import vending.lxuan.com.vendingmachine.model.DataModel;
 import vending.lxuan.com.vendingmachine.model.UpModel;
 
 /**
@@ -20,26 +26,42 @@ import vending.lxuan.com.vendingmachine.model.UpModel;
  * 18/5/9
  */
 
-public class FallingActivity extends Activity {
+public class FallingActivity extends Activity implements View.OnClickListener {
     private static final String PWD = "pass1234";
     private MyDialog dialog;
+    private Button allRest;
+    private Button allSave;
+    private UpAdapter adapter;
+    //一共
+    public static final int PRODUCT_ALL_COUNT = 30;
+    private List<DataModel> data;
+    //所有产品编号
+    //private List<String> allProductNumber;
+    //private List<String> allProductCount;
+    private VendingDao dao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
+
     }
 
     private void initView() {
         setContentView(R.layout.activity_falling);
-
-        UpModel model = new UpModel();
-        for(int i = 1; i < 61; i++) {
-            model.name.add(String.valueOf(i));
-        }
-
+        allRest = findViewById(R.id.reset);
+        allRest.setOnClickListener(this);
+        allSave = findViewById(R.id.save_all);
+        allSave.setOnClickListener(this);
+        //       UpModel model = new UpModel();
+//        for (int i = 1; i < PRODUCT_ALL_COUNT + 1; i++) {
+//            model.name.add(String.valueOf(i));
+//        }
+        dao = new VendingDao();
+        data = dao.getAllProductNumberList();
+        adapter = new UpAdapter(data);
         ListView listView = (ListView) findViewById(R.id.lv_up);
-        listView.setAdapter(new UpAdapter(model));
+        listView.setAdapter(adapter);
 
         findViewById(R.id.ll_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,10 +69,31 @@ public class FallingActivity extends Activity {
                 finish();
             }
         });
-        
-        dialog = new MyDialog(this);
-        dialog.setCancelable(false);
-        dialog.show();
+        if(!BuildConfig.IS_DEBUG){
+            dialog = new MyDialog(this);
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.save_all:
+                dao.saveAll(data);
+                Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.reset:
+                dao.resetAll(data);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(this, "清空成功", Toast.LENGTH_SHORT).show();
+
+                break;
+        }
     }
 
     public class FullScreenDialog extends Dialog {
@@ -93,4 +136,6 @@ public class FallingActivity extends Activity {
             });
         }
     }
+
+
 }

@@ -130,7 +130,7 @@ public class DetailActivity extends BaseActivity {
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            Log.v("test", "启动失败");
+            Log.e("HLA", "SerialPort 启动失败");
             e.printStackTrace();
         }
     }
@@ -164,10 +164,10 @@ public class DetailActivity extends BaseActivity {
                     return;
                 }
                 for (DataModel model : dao.selectNoListInfo(getIntent().getStringExtra("pageNumb"))) {
-                    if (Integer.valueOf(model.numb) > 0) {
-                        if (sendCmds(model.aisleName)) {
+                    if (Integer.valueOf(model.productCount) > 0) {
+                        if (sendCmds(model._id)||BuildConfig.IS_TEST_DB) {
                             Contents.b += 1;
-                            dao.updateListInfo(model.aisleName, getIntent().getStringExtra("pageNumb"), (Integer.valueOf(model.numb) - 1) + "");
+                            dao.updateListInfo(model._id, getIntent().getStringExtra("pageNumb"), (Integer.valueOf(model.productCount) - 1) + "");
                             dialog.show();
 
                             Intent intent = new Intent();

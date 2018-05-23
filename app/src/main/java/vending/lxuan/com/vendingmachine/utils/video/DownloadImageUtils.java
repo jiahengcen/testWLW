@@ -2,7 +2,6 @@ package vending.lxuan.com.vendingmachine.utils.video;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -13,9 +12,7 @@ import java.io.InputStream;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import vending.lxuan.com.vendingmachine.service.DownloadService;
 
 import static vending.lxuan.com.vendingmachine.utils.video.VideoHelp.APP_VIDEO_DIR;
 
@@ -77,10 +74,12 @@ public class DownloadImageUtils {
             BufferedInputStream bis = new BufferedInputStream(is);
             byte[] buffer = new byte[1024];
             int len;
+            Log.e("HLC","writeResponseBodyToDisk +"+System.currentTimeMillis());
             while ((len = bis.read(buffer)) != -1) {
+                Log.e("HLC","writeResponseBodyToDisk ...");
                 fos.write(buffer, 0, len);
             }
-
+            Log.e("HLC","writeResponseBodyToDiskEnd +"+System.currentTimeMillis());
             fos.flush();
             fos.close();
             bis.close();

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ll_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="返回" />
+
+            <Button
+                android:id="@+id/reset"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="全部清空" />
+
+            <Button
+                android:id="@+id/save_all"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="全部保存" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/list1"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list2"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list3"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list4"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list5"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list11"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list12"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list13"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list14"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list15"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list21"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list22"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list23"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list24"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list25"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list31"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list32"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list33"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list34"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list35"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list41"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list42"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list43"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list44"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list45"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list51"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list52"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list53"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list54"
+                    layout="@layout/adapter_new_up" />
+
+                <include
+                    android:id="@+id/list55"
+                    layout="@layout/adapter_new_up" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

@@ -6,15 +6,49 @@ android {
         applicationId "vending.lxuan.com.vendingmachine"
         minSdkVersion 18
         targetSdkVersion 27
-        versionCode 104
-        versionName "1.0.104"
+        versionCode 106
+        versionName "1.0.106"
+        flavorDimensions "versionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+    signingConfigs {
+        release {
+            keyAlias 'innisfree'
+            keyPassword 'vendingmachine'
+            storeFile file('vending.jks')
+            storePassword 'innisfreetopichina'
+        }
+//        config {
+//            keyAlias 'androiddebugkey'
+//            keyPassword 'android'
+//            storeFile file('./debug.keystore')
+//            storePassword 'android'
+//        }
+    }
+    //def API_RELEASE_HOST = "\"http://release.api.cn\""
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "IS_DEBUG", "false"
+            //signingConfig signingConfigs.release
+            // buildConfigField "String", "API_HOST", "${API_RELEASE_HOST}"//API Host
+        }
+        debug {
+            buildConfigField "boolean", "IS_DEBUG", "true"
+            signingConfig signingConfigs.release
+            //buildConfigField "String", "API_HOST", "${API_RELEASE_HOST}"//API Host
+        }
+    }
+    productFlavors {
+        //正常发布版本
+        cnormal {
+            buildConfigField "boolean", "IS_TEST_DB", "false"
+        }
+        //测试商品兑换数据库（屏蔽sendCmds())
+        ctestDb {
+            buildConfigField "boolean", "IS_TEST_DB", "true"
         }
     }
     externalNativeBuild {
@@ -22,6 +56,8 @@ android {
             path 'src/main/jni/Android.mk'
         }
     }
+
+
 }
 
 dependencies {
