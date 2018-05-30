@@ -152,7 +152,9 @@ public class DownloadTask extends AsyncTask<String, Integer, Integer> {
                 e.printStackTrace();
             }
         }
-        lock.unlock();
+        if (lock != null && lock.isLocked()) {
+            lock.unlock();
+        }
         return TYPE_FAILED;
     }
 

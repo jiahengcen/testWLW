@@ -6,8 +6,8 @@ android {
         applicationId "vending.lxuan.com.vendingmachine"
         minSdkVersion 18
         targetSdkVersion 27
-        versionCode 106
-        versionName "1.0.106"
+        versionCode 107
+        versionName "1.0.107"
         flavorDimensions "versionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

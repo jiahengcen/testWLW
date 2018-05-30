@@ -1,17 +1,21 @@
 package vending.lxuan.com.vendingmachine.dao;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import vending.lxuan.com.vendingmachine.FallingActivity;
 import vending.lxuan.com.vendingmachine.model.DataModel;
 import vending.lxuan.com.vendingmachine.model.DataModelHelper;
+import vending.lxuan.com.vendingmachine.model.ProductMode;
+import vending.lxuan.com.vendingmachine.model.SoldProduct;
+import vending.lxuan.com.vendingmachine.model.SoldProductResponseModel;
 
 /**
  * Created by apple
@@ -36,7 +40,7 @@ public class VendingDao extends BaseDao {
             sql.insert(VendingTable.TABLE_NAME, null, value);
         } catch (Exception e) {
         } finally {
-          //  sql.close();
+            //sql.close();
         }
 
 
@@ -77,7 +81,7 @@ public class VendingDao extends BaseDao {
             model.productCount = cursor.getString(2);
             return model;
         }
-        //cursor.close();
+        cursor.close();
         //sql.close();
         return null;
     }
@@ -105,7 +109,7 @@ public class VendingDao extends BaseDao {
             model.productCount = cursor.getString(2);
             list.add(model);
         }
-        //cursor.close();
+        cursor.close();
         //sql.close();
         return list;
     }
@@ -275,9 +279,115 @@ public class VendingDao extends BaseDao {
         } catch (Exception e) {
 
         } finally {
-           // cursor.close();
-           // sql.close();
+            // cursor.close();
+            // sql.close();
         }
         return list;
+    }
+
+    public List<ProductMode.ProductBean> getAllProductList() {
+        List<ProductMode.ProductBean> list = new ArrayList<>();
+        SQLiteDatabase sql = getWritableDatabase();
+        Cursor cursor = null;
+        cursor = sql.rawQuery("select " + VendingTable._ID + " ," +
+                VendingTable.PRODUCT_NO + " ," +
+                VendingTable.PRODUCT_COUNT + " from "
+                + VendingTable.TABLE_NAME, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    String StrId = cursor.getString(0);
+                    try {
+                        ProductMode.ProductBean bean = new ProductMode.ProductBean();
+                        bean.cargoRoadId = StrId;
+                        bean.productId = cursor.getString(1);
+                        bean.productCount = cursor.getString(2);
+                        list.add(bean);
+                    } catch (Exception e) {
+                        continue;
+                    }
+                } while (cursor.moveToNext());
+            }
+
+
+        } catch (Exception e) {
+
+        } finally {
+            cursor.close();
+            sql.close();
+        }
+        return list;
+    }
+
+    public List<SoldProduct> soldProduct() {
+        List<SoldProduct> list = new ArrayList<>();
+
+        SQLiteDatabase sql = getWritableDatabase();
+        Cursor cursor = null;
+        cursor = sql.rawQuery("select " + SoldProductTable._ID + " ," +
+                SoldProductTable.CARGO_ROAD_ID + " ," +
+                SoldProductTable.PRODUCT_NO + " ," +
+                SoldProductTable.SOLD_TIME + " from " +
+                SoldProductTable.TABLE_NAME + " where " +
+                SoldProductTable.SOLD_RECORD_BY_SERVER +
+                " = " + SoldProductTable.SOLD_RECORD_BY_SERVER_FALSE, null);
+        //select _id ,cargoRoadId,product_no,sold_time from sold_product_table  order by _id desc limit 1
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    SoldProduct soldProduct = new SoldProduct();
+                    soldProduct._id = cursor.getInt(cursor.getColumnIndex(SoldProductTable._ID));
+                    soldProduct.cargoRoadId = cursor.getString(cursor.getColumnIndex(SoldProductTable.CARGO_ROAD_ID));
+                    soldProduct.productId = cursor.getString(cursor.getColumnIndex(SoldProductTable.PRODUCT_NO));
+                    soldProduct.soldTime = cursor.getLong(cursor.getColumnIndex(SoldProductTable.SOLD_TIME));
+                } while (cursor.moveToNext());
+            }
+
+        } catch (Exception e) {
+
+        } finally {
+            cursor.close();
+            sql.close();
+        }
+        return list;
+
+    }
+
+    public void addSoldProduct(String cargoRoadId, String productNo, long soldTime) {
+        SQLiteDatabase sql = getWritableDatabase();
+
+        try {
+            sql.execSQL("INSERT INTO " + SoldProductTable.TABLE_NAME + " (" +
+                    SoldProductTable.CARGO_ROAD_ID + ", " +
+                    SoldProductTable.PRODUCT_NO + ", " +
+                    SoldProductTable.SOLD_TIME +
+                    ") VALUES (" +
+                    "'" + cargoRoadId + "', " +
+                    "'" + productNo + "', " +
+                    soldTime +
+                    ") ");
+
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            sql.close();
+        }
+    }
+
+    public void updateSoldProduct(List<SoldProductResponseModel.SoldId> ids) {
+        SQLiteDatabase sql = getWritableDatabase();
+        for (int i = 0, count = ids.size(); i < count; i++) {
+            try {
+                sql.execSQL("UPDATE " + SoldProductTable.TABLE_NAME + " SET " +
+                        SoldProductTable.SOLD_RECORD_BY_SERVER + " = " +
+                        SoldProductTable.SOLD_RECORD_BY_SERVER_TRUE +
+                        " where " + SoldProductTable._ID + "=" + Integer.parseInt(ids.get(i).id)
+                );
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+        sql.close();
     }
 }

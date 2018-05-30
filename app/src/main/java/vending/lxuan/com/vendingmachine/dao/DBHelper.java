@@ -2,7 +2,9 @@ package vending.lxuan.com.vendingmachine.dao;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import vending.lxuan.com.vendingmachine.base.BaseApplication;
 
@@ -14,12 +16,14 @@ import vending.lxuan.com.vendingmachine.base.BaseApplication;
 public class DBHelper extends SQLiteOpenHelper {
 
     private final static String TAG = "DBHelper";
-    private static final int DB_VERSION = 1;   //!!!任何table的新增都要在当前version数值上'+1'
+    //private static final int DATABASE_VERSION = 1;   //!!!任何table的新增都要在当前version数值上'+1'
+
+    private static final int DATABASE_VERSION = 2;   //!!!任何table的新增都要在当前version数值上'+1'
     private final static String DB_NAME = "vending.db";
     private static DBHelper dbHelper;
 
     private DBHelper() {
-        super(BaseApplication.sAppContext, DB_NAME, null, DB_VERSION);
+        super(BaseApplication.sAppContext, DB_NAME, null, DATABASE_VERSION);
     }
 
     public static DBHelper getDBHelper() {
@@ -32,12 +36,22 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(VendingTable.getCreateSQL());
+        Log.e("HLA",SoldProductTable.createTableSql);
+        db.execSQL(SoldProductTable.createTableSql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (!tabIsExist(VendingTable.TABLE_NAME, db)) {
             db.execSQL(VendingTable.getCreateSQL());
+        }
+        if (oldVersion == 1) {
+            upgradeToVersion2(db);
+            oldVersion++;
+        }
+        if (oldVersion != newVersion) {
+            throw new IllegalStateException(
+                    "error upgrading the database to version " + newVersion);
         }
     }
 
@@ -69,5 +83,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.close();
         }
         return result;
+    }
+
+    private void upgradeToVersion2(SQLiteDatabase db) {
+        try {
+            db.execSQL(SoldProductTable.dropTableSql);
+            db.execSQL(SoldProductTable.createTableSql);
+
+        } catch (SQLiteException e) {
+
+            Log.v(TAG, "Version 2: has error");
+        }
     }
 }

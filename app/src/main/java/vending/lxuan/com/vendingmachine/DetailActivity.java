@@ -38,6 +38,7 @@ import vending.lxuan.com.vendingmachine.base.BaseActivity;
 import vending.lxuan.com.vendingmachine.dao.VendingDao;
 import vending.lxuan.com.vendingmachine.model.DataModel;
 import vending.lxuan.com.vendingmachine.model.ListModel;
+import vending.lxuan.com.vendingmachine.service.PushDbService;
 import vending.lxuan.com.vendingmachine.utils.Contents;
 import vending.lxuan.com.vendingmachine.utils.RLConverterFactory;
 import vending.lxuan.com.vendingmachine.utils.UrlHelp;
@@ -165,15 +166,16 @@ public class DetailActivity extends BaseActivity {
                 }
                 for (DataModel model : dao.selectNoListInfo(getIntent().getStringExtra("pageNumb"))) {
                     if (Integer.valueOf(model.productCount) > 0) {
-                        if (sendCmds(model._id)||BuildConfig.IS_TEST_DB) {
+                        if (sendCmds(model._id) || BuildConfig.IS_TEST_DB) {
                             Contents.b += 1;
-                            dao.updateListInfo(model._id, getIntent().getStringExtra("pageNumb"), (Integer.valueOf(model.productCount) - 1) + "");
+                            final String productNo=getIntent().getStringExtra("pageNumb");
+                            dao.updateListInfo(model._id, productNo, (Integer.valueOf(model.productCount) - 1) + "");
                             dialog.show();
-
+                            dao.addSoldProduct(model._id,productNo,System.currentTimeMillis());
                             Intent intent = new Intent();
                             intent.setAction("com.success.receiver");
                             sendBroadcast(intent);
-
+                            startPushDbService();
                             isClick = false;
                             Contents.IS_CLICK = false;
                             coin.setVisibility(View.GONE);
@@ -190,6 +192,12 @@ public class DetailActivity extends BaseActivity {
         dialog = new MyDialog(this);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
+    }
+
+    private void startPushDbService() {
+        Intent intent = new Intent();
+        intent.setClass(this, PushDbService.class);
+        startService(intent);
     }
 
     private void initData() {
@@ -289,38 +297,7 @@ public class DetailActivity extends BaseActivity {
         return result;
     }
 
-    //
-//
-//    public boolean sendCmds(String cmd) {
-//        boolean result = true;
-//        byte c = 0x57;
-//        byte d = 0x58;
-//        byte h = 0x66;
-//        byte f = 0x03;
-//        byte g = getAisleCode(cmd);
-//        byte i = 0x00;
-//        i+=c;
-//        i+=d;
-//        i+=h;
-//        i+=f;
-//        i+=0X01;
-//        i+=Contents.b;
-//        byte[] mBuffer = {0x57, 0x58, 0x00, 0x66, 0x00, Contents.b, 0x03, 0x01, 0X00, i};
-//       // byte[] mBuffer = {0x57, 0x58, 0x00, 0x66, 0x00, Contents.b, 0x03, 0x01, g, i};
-//        Log.v("debug", "发送======>" + Arrays.toString(mBuffer));
-//        //注意：我得项目中需要在每次发送后面加\r\n，大家根据项目项目做修改，也可以去掉，直接发送mBuffer
-//        try {
-//            if (mOutputStream != null) {
-//                mOutputStream.write(mBuffer);
-//            } else {
-//                result = false;
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            result = false;
-//        }
-//        return result;
-//    }
+
     private byte getAisleCode(String name) {
         Integer integer = 70;
         try {
@@ -329,140 +306,12 @@ public class DetailActivity extends BaseActivity {
         } catch (Exception e) {
             Log.e("debug", "getAisleCode is not a num. " + name);
         }
-        if(integer>60 || integer<=0){
+        if (integer > 60 || integer <= 0) {
             Log.e("debug", "getAisleCode number big . " + integer);
         }
 
         return integer.byteValue();
     }
-//    private byte getAisleCode(String name) {
-//        switch (name) {
-//            case "1":
-//                return 0x00;
-//            case "2":
-//                return 0x01;
-//            case "3":
-//                return 0x02;
-//            case "4":
-//                return 0x03;
-//            case "5":
-//                return 0x04;
-//            case "6":
-//                return 0x05;
-//            case "7":
-//                return 0x06;
-//            case "8":
-//                return 0x07;
-//            case "9":
-//                return 0x08;
-//            case "10":
-//                return 0x09;
-//            case "11":
-//                return 0x0A;
-//            case "12":
-//                return 0x0B;
-//            case "13":
-//                return 0x0C;
-//            case "14":
-//                return 0x0D;
-//            case "15":
-//                return 0x0E;
-//            case "16":
-//                return 0x0F;
-//            case "17":
-//                return 0x16;
-//            case "18":
-//                return 0x17;
-//            case "19":
-//                return 0x18;
-//            case "20":
-//                return 0x19;
-//            case "21":
-//                return 0x20;
-//            case "22":
-//                return 0x21;
-//            case "23":
-//                return 0x22;
-//            case "24":
-//                return 0x23;
-//            case "25":
-//                return 0x24;
-//            case "26":
-//                return 0x25;
-//            case "27":
-//                return 0x26;
-//            case "28":
-//                return 0x27;
-//            case "29":
-//                return 0x28;
-//            case "30":
-//                return 0x29;
-//            case "31":
-//                return 0x30;
-//            case "32":
-//                return 0x31;
-//            case "33":
-//                return 0x32;
-//            case "34":
-//                return 0x33;
-//            case "35":
-//                return 0x34;
-//            case "36":
-//                return 0x35;
-//            case "37":
-//                return 0x36;
-//            case "38":
-//                return 0x37;
-//            case "39":
-//                return 0x38;
-//            case "40":
-//                return 0x39;
-//            case "41":
-//                return 0x40;
-//            case "42":
-//                return 0x41;
-//            case "43":
-//                return 0x42;
-//            case "44":
-//                return 0x43;
-//            case "45":
-//                return 0x44;
-//            case "46":
-//                return 0x45;
-//            case "47":
-//                return 0x46;
-//            case "48":
-//                return 0x47;
-//            case "49":
-//                return 0x48;
-//            case "50":
-//                return 0x49;
-//            case "51":
-//                return 0x50;
-//            case "52":
-//                return 0x51;
-//            case "53":
-//                return 0x52;
-//            case "54":
-//                return 0x53;
-//            case "55":
-//                return 0x54;
-//            case "56":
-//                return 0x55;
-//            case "57":
-//                return 0x56;
-//            case "58":
-//                return 0x57;
-//            case "59":
-//                return 0x58;
-//            case "60":
-//                return 0x59;
-//            case "61":
-//                return 0x60;
-//            default:
-//                return 0x00;
-//        }
-//    }
 
 
     public class MyDialog extends Dialog {
