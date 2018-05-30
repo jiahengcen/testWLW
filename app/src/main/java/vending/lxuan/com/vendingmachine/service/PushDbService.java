@@ -54,6 +54,7 @@ public class PushDbService extends Service {
             sold.soldId = "" + product1._id;
             sold.soldTime = product1.soldTime / 1000;
             sold.productCount = "1";
+            soldList.add(sold);
         }
 
 
@@ -82,8 +83,8 @@ public class PushDbService extends Service {
         s.enqueue(new Callback<SoldProductResponseModel>() {
             @Override
             public void onResponse(Call<SoldProductResponseModel> call, Response<SoldProductResponseModel> response) {
-                List<SoldProductResponseModel.SoldId> ids=response.body().soldProductSuccess;
-                if(ids!=null&&ids.size()!=0){
+                List<String> ids = response.body().msg.soldProductSuccess;
+                if (ids != null && ids.size() != 0) {
                     VendingDao dao = new VendingDao();
                     dao.updateSoldProduct(ids);
                 }

@@ -340,6 +340,7 @@ public class VendingDao extends BaseDao {
                     soldProduct.cargoRoadId = cursor.getString(cursor.getColumnIndex(SoldProductTable.CARGO_ROAD_ID));
                     soldProduct.productId = cursor.getString(cursor.getColumnIndex(SoldProductTable.PRODUCT_NO));
                     soldProduct.soldTime = cursor.getLong(cursor.getColumnIndex(SoldProductTable.SOLD_TIME));
+                    list.add(soldProduct);
                 } while (cursor.moveToNext());
             }
 
@@ -375,14 +376,14 @@ public class VendingDao extends BaseDao {
         }
     }
 
-    public void updateSoldProduct(List<SoldProductResponseModel.SoldId> ids) {
+    public void updateSoldProduct(List<String> ids) {
         SQLiteDatabase sql = getWritableDatabase();
         for (int i = 0, count = ids.size(); i < count; i++) {
             try {
                 sql.execSQL("UPDATE " + SoldProductTable.TABLE_NAME + " SET " +
                         SoldProductTable.SOLD_RECORD_BY_SERVER + " = " +
                         SoldProductTable.SOLD_RECORD_BY_SERVER_TRUE +
-                        " where " + SoldProductTable._ID + "=" + Integer.parseInt(ids.get(i).id)
+                        " where " + SoldProductTable._ID + "=" + Integer.parseInt(ids.get(i))
                 );
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
