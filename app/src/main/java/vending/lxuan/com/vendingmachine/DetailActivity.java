@@ -40,6 +40,7 @@ import vending.lxuan.com.vendingmachine.model.DataModel;
 import vending.lxuan.com.vendingmachine.model.ListModel;
 import vending.lxuan.com.vendingmachine.service.PushDbService;
 import vending.lxuan.com.vendingmachine.utils.Contents;
+import vending.lxuan.com.vendingmachine.utils.PicassoWrapper;
 import vending.lxuan.com.vendingmachine.utils.RLConverterFactory;
 import vending.lxuan.com.vendingmachine.utils.UrlHelp;
 
@@ -204,19 +205,19 @@ public class DetailActivity extends BaseActivity {
         String id = getIntent().getStringExtra("pageNumb");
         switch (id) {
             case "1":
-                Picasso.with(this).load(UrlHelp.URL_DETAIL_1).into(viewBg);
+                PicassoWrapper.with(this).load(UrlHelp.URL_DETAIL_1).into(viewBg);
                 break;
             case "2":
-                Picasso.with(this).load(UrlHelp.URL_DETAIL_2).into(viewBg);
+                PicassoWrapper.with(this).load(UrlHelp.URL_DETAIL_2).into(viewBg);
                 break;
             case "3":
-                Picasso.with(this).load(UrlHelp.URL_DETAIL_3).into(viewBg);
+                PicassoWrapper.with(this).load(UrlHelp.URL_DETAIL_3).into(viewBg);
                 break;
             case "4":
-                Picasso.with(this).load(UrlHelp.URL_DETAIL_4).into(viewBg);
+                PicassoWrapper.with(this).load(UrlHelp.URL_DETAIL_4).into(viewBg);
                 break;
             case "5":
-                Picasso.with(this).load(UrlHelp.URL_DETAIL_5).into(viewBg);
+                PicassoWrapper.with(this).load(UrlHelp.URL_DETAIL_5).into(viewBg);
                 break;
         }
 
@@ -324,19 +325,19 @@ public class DetailActivity extends BaseActivity {
             String id = getIntent().getStringExtra("pageNumb");
             switch (id) {
                 case "1":
-                    Picasso.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_1).into(img);
+                    PicassoWrapper.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_1).into(img);
                     break;
                 case "2":
-                    Picasso.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_2).into(img);
+                    PicassoWrapper.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_2).into(img);
                     break;
                 case "3":
-                    Picasso.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_3).into(img);
+                    PicassoWrapper.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_3).into(img);
                     break;
                 case "4":
-                    Picasso.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_4).into(img);
+                    PicassoWrapper.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_4).into(img);
                     break;
                 case "5":
-                    Picasso.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_5).into(img);
+                    PicassoWrapper.with(DetailActivity.this).load(UrlHelp.URL_SUCCESS_5).into(img);
                     break;
             }
             img.setOnClickListener(new View.OnClickListener() {

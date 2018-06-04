@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,11 +13,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import vending.lxuan.com.vendingmachine.base.BaseActivity;
-import vending.lxuan.com.vendingmachine.service.DownloadService;
 import vending.lxuan.com.vendingmachine.utils.Contents;
+import vending.lxuan.com.vendingmachine.utils.PicassoWrapper;
 import vending.lxuan.com.vendingmachine.utils.UrlHelp;
 
 /**
@@ -35,16 +34,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private MyReceiver receiver;
     private MyReceiver1 receiver1;
     private TextView coin;
-    private Button touBiButton;
+    private Button debugTouBiButton;
+    private Button debugRefreshButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        initData();
         initReceiver();
+
     }
 
+    @Override
+    protected void onResume() {
+        initData();
+        super.onResume();
+    }
 
     @Override
     protected void onDestroy() {
@@ -100,20 +105,30 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         if (BuildConfig.IS_DEBUG) {
-            touBiButton = findViewById(R.id.toubi);
-            touBiButton.setVisibility(View.VISIBLE);
-            touBiButton.setOnClickListener(this);
+            debugTouBiButton = findViewById(R.id.toubi);
+            debugTouBiButton.setVisibility(View.VISIBLE);
+            debugTouBiButton.setOnClickListener(this);
+            debugRefreshButton = findViewById(R.id.refreshImage);
+            debugRefreshButton.setVisibility(View.VISIBLE);
+            debugRefreshButton.setOnClickListener(this);
         }
 
     }
 
     private void initData() {
-        Picasso.with(this).load(UrlHelp.URL_LIST_BG).into(viewBg);
-        Picasso.with(this).load(UrlHelp.URL_LIST_1).into(view1);
-        Picasso.with(this).load(UrlHelp.URL_LIST_2).into(view2);
-        Picasso.with(this).load(UrlHelp.URL_LIST_3).into(view3);
-        Picasso.with(this).load(UrlHelp.URL_LIST_4).into(view4);
-        Picasso.with(this).load(UrlHelp.URL_LIST_5).into(view5);
+        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_BG).into(viewBg);
+        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_1).into(view1);
+        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_2).into(view2);
+        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_3).into(view3);
+        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_4).into(view4);
+        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_5).into(view5);
+
+//        Picasso.with(this).load(UrlHelp.URL_LIST_BG).into(viewBg);
+//        Picasso.with(this).load(UrlHelp.URL_LIST_1).into(view1);
+//        Picasso.with(this).load(UrlHelp.URL_LIST_2).into(view2);
+//        Picasso.with(this).load(UrlHelp.URL_LIST_3).into(view3);
+//        Picasso.with(this).load(UrlHelp.URL_LIST_4).into(view4);
+//        Picasso.with(this).load(UrlHelp.URL_LIST_5).into(view5);
     }
 
     @Override
@@ -143,6 +158,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.toubi:
                 sendTouBi();
+                break;
+            case R.id.refreshImage:
+                Config.Debug.needRefreshImage = !Config.Debug.needRefreshImage;
+                if (Config.Debug.needRefreshImage) {
+                    debugRefreshButton.setBackgroundColor(Color.GREEN);
+                } else {
+                    debugRefreshButton.setBackgroundColor(Color.RED);
+                }
                 break;
         }
     }
