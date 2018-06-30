@@ -98,12 +98,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 openDetail("4");
             }
         });
-        view5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDetail("5");
-            }
-        });
+//        view5.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                openDetail("5");
+//            }
+//        });
         if (BuildConfig.IS_DEBUG) {
             debugTouBiButton = findViewById(R.id.toubi);
             debugTouBiButton.setVisibility(View.VISIBLE);
