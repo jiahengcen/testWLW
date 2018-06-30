@@ -121,7 +121,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         PicassoWrapper.with(this).load(UrlHelp.URL_LIST_2).into(view2);
         PicassoWrapper.with(this).load(UrlHelp.URL_LIST_3).into(view3);
         PicassoWrapper.with(this).load(UrlHelp.URL_LIST_4).into(view4);
-        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_5).into(view5);
+        //PicassoWrapper.with(this).load(UrlHelp.URL_LIST_5).into(view5);
 
 //        Picasso.with(this).load(UrlHelp.URL_LIST_BG).into(viewBg);
 //        Picasso.with(this).load(UrlHelp.URL_LIST_1).into(view1);
