@@ -6,8 +6,8 @@ android {
         applicationId "vending.lxuan.com.vendingmachine"
         minSdkVersion 18
         targetSdkVersion 27
-        versionCode 109
-        versionName "1.0.109"
+        versionCode 110
+        versionName "1.0.110"
         flavorDimensions "versionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -61,10 +61,12 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation files('libs/umeng-common-1.5.3.jar')
+    implementation files('libs/umeng-analytics-7.5.3.jar')
 }

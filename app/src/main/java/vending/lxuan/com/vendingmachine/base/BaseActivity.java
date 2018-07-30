@@ -105,7 +105,7 @@ public class BaseActivity extends Activity {
             public void run() {
                 URL url = null;
                 try {
-                    url = new URL("104.238.148.109/inner/get/data");
+                    url = new URL("104.238.148.109/inner/get/data.php");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(8000);
