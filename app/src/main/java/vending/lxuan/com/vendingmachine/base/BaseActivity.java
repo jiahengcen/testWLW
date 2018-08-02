@@ -24,6 +24,7 @@ import java.net.URL;
 import vending.lxuan.com.vendingmachine.AdActivity;
 import vending.lxuan.com.vendingmachine.BuildConfig;
 import vending.lxuan.com.vendingmachine.VideoActivity;
+import vending.lxuan.com.vendingmachine.WelcomeActivity;
 import vending.lxuan.com.vendingmachine.model.Dbc;
 import vending.lxuan.com.vendingmachine.service.DownloadService;
 import vending.lxuan.com.vendingmachine.utils.Contents;
@@ -35,13 +36,15 @@ import vending.lxuan.com.vendingmachine.utils.Contents;
 
 public class BaseActivity extends Activity {
     protected static final int MSG = 1;
+    protected static final int MSG_CHECK_VERSION = 2;
     protected long mBackgroundAliveTime = 1000 * 60;
-
+    protected long mCheckAppVersion = 1000L * 60*60;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (BuildConfig.IS_DEBUG) {
             mBackgroundAliveTime = 1000 * 10;
+            mCheckAppVersion = 1000L * 60;
         }
     }
 
@@ -50,6 +53,8 @@ public class BaseActivity extends Activity {
         super.onResume();
         mHandler.removeMessages(MSG);
         mHandler.sendEmptyMessageDelayed(MSG, mBackgroundAliveTime);
+        mHandler.removeMessages(MSG_CHECK_VERSION);
+        mHandler.sendEmptyMessageDelayed(MSG_CHECK_VERSION, mCheckAppVersion);
         p();
     }
 
@@ -57,6 +62,7 @@ public class BaseActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mHandler.removeMessages(MSG);
+        mHandler.removeMessages(MSG_CHECK_VERSION);
     }
 
     @Override
@@ -67,6 +73,8 @@ public class BaseActivity extends Activity {
             case MotionEvent.ACTION_UP:
                 mHandler.removeMessages(MSG);
                 mHandler.sendEmptyMessageDelayed(MSG, mBackgroundAliveTime);
+                mHandler.removeMessages(MSG_CHECK_VERSION);
+                mHandler.sendEmptyMessageDelayed(MSG_CHECK_VERSION, mCheckAppVersion);
                 break;
         }
         return super.onTouchEvent(event);
@@ -77,7 +85,7 @@ public class BaseActivity extends Activity {
         startService(intent);
     }
 
-    protected Handler mHandler = new Handler() {
+    protected  Handler mHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
@@ -94,6 +102,9 @@ public class BaseActivity extends Activity {
 
                         }
                     }
+                    break;
+                case MSG_CHECK_VERSION:
+                    WelcomeActivity.queryPath();
                     break;
             }
         }

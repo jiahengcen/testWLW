@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -22,6 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
+import vending.lxuan.com.vendingmachine.base.BaseApplication;
 import vending.lxuan.com.vendingmachine.model.PathModel;
 import vending.lxuan.com.vendingmachine.receiver.ApkDownloadBCReceiver;
 import vending.lxuan.com.vendingmachine.service.CheckCoinService;
@@ -65,7 +67,7 @@ public class WelcomeActivity extends Activity {
         mHandler.sendEmptyMessageDelayed(0, SPLASH_TIME);
     }
 
-    private void queryPath() {
+    public static void queryPath() {
         HttpLoggingInterceptor.Level l = HttpLoggingInterceptor.Level.BODY;
         OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS).writeTimeout(20, TimeUnit.SECONDS)
@@ -80,10 +82,11 @@ public class WelcomeActivity extends Activity {
             @Override
             public void onResponse(Call<PathModel> call, Response<PathModel> response) {
                 int code = response.code();
+                Log.e("HLA","re:"+response.body().msg.version);
                 if (code >= 200 && code < 300) {
                     if ("200".equals(response.body().suc)) {
-                        if (Integer.valueOf(response.body().msg.version) > getAppVersionCode(WelcomeActivity.this)) {
-                            ApkDownloadBCReceiver.startDownload(WelcomeActivity.this, response.body().msg.url);
+                        if (Integer.valueOf(response.body().msg.version) > getAppVersionCode(BaseApplication.sAppContext)) {
+                            ApkDownloadBCReceiver.startDownload(BaseApplication.sAppContext, response.body().msg.url);
                         }
                     }
                 }

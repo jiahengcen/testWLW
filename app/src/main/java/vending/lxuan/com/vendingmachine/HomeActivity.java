@@ -105,18 +105,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 openDetail("3");
             }
         });
-//        view4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openDetail("4");
-//            }
-//        });
-//        view5.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openDetail("5");
-//            }
-//        });
+        view4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDetail("4");
+            }
+        });
+        view5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDetail("5");
+            }
+        });
         if (BuildConfig.IS_DEBUG) {
             debugTouBiButton = findViewById(R.id.toubi);
             debugTouBiButton.setVisibility(View.VISIBLE);
@@ -136,8 +136,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         PicassoWrapper.with(this).load(UrlHelp.URL_LIST_1).into(view1);
         PicassoWrapper.with(this).load(UrlHelp.URL_LIST_2).into(view2);
         PicassoWrapper.with(this).load(UrlHelp.URL_LIST_3).into(view3);
-        //PicassoWrapper.with(this).load(UrlHelp.URL_LIST_4).into(view4);
-        //PicassoWrapper.with(this).load(UrlHelp.URL_LIST_5).into(view5);
+        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_4).into(view4);
+        PicassoWrapper.with(this).load(UrlHelp.URL_LIST_5).into(view5);
     }
 
     @Override

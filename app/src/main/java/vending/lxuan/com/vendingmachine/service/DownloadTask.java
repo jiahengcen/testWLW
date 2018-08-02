@@ -167,7 +167,7 @@ public class DownloadTask extends AsyncTask<String, Integer, Integer> {
      */
     protected void onProgressUpdate(Integer... values) {
         int progress = values[0];
-        Log.e("HLA", "progress..." + progress);
+        Log.i("HLB", "progress..." + progress);
         if (progress > lastProgress) {
             listener.onProgress(progress);
             lastProgress = progress;
