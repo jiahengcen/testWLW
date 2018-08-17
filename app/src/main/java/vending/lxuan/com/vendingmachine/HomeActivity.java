@@ -2,6 +2,7 @@ package vending.lxuan.com.vendingmachine;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +25,8 @@ import android.widget.TextView;
 
 import java.lang.reflect.Method;
 import java.net.NetworkInterface;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 
@@ -46,13 +51,38 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private MyReceiver receiver;
     private MyReceiver1 receiver1;
     private TextView coin;
+    private View exitButton;
+    private TextView time;
     private Button debugTouBiButton;
     private Button debugRefreshButton;
     private Button debugCrashButton;
+    private static HomeActivity activity;
+    private static final int MSG_TIME = 100;
+    private static Handler handler = new Handler() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_TIME:
+                    if (activity != null && !activity.isDestroyed()) {
+                        activity.time.setText(dateFormat.format(new Date()));
+                        this.sendEmptyMessageDelayed(MSG_TIME, 1000);
+                    } else {
+                        activity = null;
+                    }
+                    break;
+            }
+
+
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity=this;
         initView();
         initReceiver();
 
@@ -62,11 +92,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     protected void onResume() {
         initData();
         super.onResume();
+        handler.sendEmptyMessage(MSG_TIME);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        activity=null;
         unregisterReceiver(receiver);
         unregisterReceiver(receiver1);
     }
@@ -80,13 +112,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         view4 = (ImageView) findViewById(R.id.iv_4);
         view5 = (ImageView) findViewById(R.id.iv_5);
         coin = (TextView) findViewById(R.id.tv_coin);
+        exitButton =  findViewById(R.id.button_exit);
+        time = (TextView) findViewById(R.id.tv_time);
         findViewById(R.id.ll_commit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(HomeActivity.this, NewFallingActivity.class));
             }
         });
-
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeActivity.this.finish();
+                System.exit(0);
+            }
+        });
         view1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,7 +206,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.toubi:
-                Log.e("HLA","getDeviceInfo:"+getDeviceInfo(this));
+                Log.e("HLA", "getDeviceInfo:" + getDeviceInfo(this));
                 sendTouBi();
                 break;
             case R.id.refreshImage:
@@ -199,7 +239,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            coin.setVisibility(View.GONE);
+            coin.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -246,7 +286,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             mac = getMacBySystemInterface(context);
         } else {
             mac = getMacByJavaAPI();
-            if (TextUtils.isEmpty(mac)){
+            if (TextUtils.isEmpty(mac)) {
                 mac = getMacBySystemInterface(context);
             }
         }

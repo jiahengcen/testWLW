@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import android_serialport_api.SerialPort;
@@ -55,12 +59,36 @@ public class DetailActivity extends BaseActivity {
     private LinearLayout textView;
     private LinearLayout linearLayout;
     private ListView listView;
+
     private VendingDao dao;
     private byte b;
     private boolean isClick = false;
     private MyDialog dialog;
     private MyReceiver receiver;
     private TextView coin;
+    private TextView time;
+    private static DetailActivity activity;
+    private static final int MSG_TIME = 100;
+    private static Handler handler = new Handler() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_TIME:
+                    if (activity != null && !activity.isDestroyed()) {
+                        activity.time.setText(dateFormat.format(new Date()));
+                        this.sendEmptyMessageDelayed(MSG_TIME, 1000);
+                    } else {
+                        activity = null;
+                    }
+                    break;
+            }
+
+
+            super.handleMessage(msg);
+        }
+    };
 
     private class ReadThread extends Thread {
         @Override
@@ -119,6 +147,7 @@ public class DetailActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dao = new VendingDao();
+        activity = this;
         initView();
         initData();
         initReceiver();
@@ -138,8 +167,15 @@ public class DetailActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        handler.sendEmptyMessage(MSG_TIME);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        activity = null;
         unregisterReceiver(receiver);
     }
 
@@ -150,6 +186,7 @@ public class DetailActivity extends BaseActivity {
         linearLayout = (LinearLayout) findViewById(R.id.ll_commit);
         listView = (ListView) findViewById(R.id.lv_msg);
         coin = (TextView) findViewById(R.id.tv_coin);
+        time = (TextView) findViewById(R.id.tv_time);
         listView.setDivider(null);
 
         textView.setOnClickListener(new View.OnClickListener() {
@@ -169,10 +206,10 @@ public class DetailActivity extends BaseActivity {
                     if (Integer.valueOf(model.productCount) > 0) {
                         if (sendCmds(model._id) || BuildConfig.IS_TEST_DB) {
                             Contents.b += 1;
-                            final String productNo=getIntent().getStringExtra("pageNumb");
+                            final String productNo = getIntent().getStringExtra("pageNumb");
                             dao.updateListInfo(model._id, productNo, (Integer.valueOf(model.productCount) - 1) + "");
                             dialog.show();
-                            dao.addSoldProduct(model._id,productNo,System.currentTimeMillis());
+                            dao.addSoldProduct(model._id, productNo, System.currentTimeMillis());
                             Intent intent = new Intent();
                             intent.setAction("com.success.receiver");
                             sendBroadcast(intent);
